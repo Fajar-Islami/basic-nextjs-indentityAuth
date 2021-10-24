@@ -11,10 +11,11 @@ const AuthContext = createContext({
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [authReady, setAuthReady] = useState(true);
 
   useEffect(() => {
-    // Failed, because now netlify paid user only can use email customise for starter team
-
+    /*!!!!!! Failed, because now netlify paid user only can use email customize for starter team
+     
     //   Kalau ada user login/sign up di setUser
     netlifyIdentity.on("login", (user) => {
       setUser(user);
@@ -27,6 +28,12 @@ export const AuthContextProvider = ({ children }) => {
       console.log("logout event");
     });
 
+    netlifyIdentity.on("init", (user) => {
+      setUser(user);
+      setAuthReady(null);
+      console.log("init event");
+    });
+
     //  init netlify identity connection
     netlifyIdentity.init(); // membuat koneksi ke netlify
 
@@ -34,18 +41,26 @@ export const AuthContextProvider = ({ children }) => {
       netlifyIdentity.off("login");
       netlifyIdentity.off("logout");
     };
+*/
   }, []);
 
   const login = () => {
     //   Untuk membuat modal otomatis dari nelify, ini buka modal
-    netlifyIdentity.open();
+    // netlifyIdentity.open();
+    const data = {
+      id: 1,
+      email: "fajar@mail.com",
+    };
+    setUser(data);
+    setAuthReady(true);
   };
 
   const logout = () => {
-    netlifyIdentity.logout();
+    // netlifyIdentity.logout();
+    setUser(null);
   };
 
-  const context = { user, login, logout };
+  const context = { user, login, logout, authReady };
 
   return (
     <AuthContext.Provider value={context}>{children}</AuthContext.Provider>
